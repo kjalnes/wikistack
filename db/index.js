@@ -3,13 +3,30 @@ var db = new Sequelize(process.env.DATABASE_URL);
 
 // model singular
 const Story = db.define('story', {
-    title: {
-        type: Sequelize.STRING
+      title: {
+          type: Sequelize.STRING
+      },
+      content: {
+          type: Sequelize.TEXT
+      }
     },
-    content: {
-        type: Sequelize.TEXT
-    }
-});
+    {
+      classMethods: {
+        createStory : function(authorName, title, content) {
+          return Author.findOne({ where : { name : authorName }})
+            .then(function(author) {
+              if(author) {
+                return author;
+              } else {
+                return Author.create({ name: authorName });
+              }
+            })
+            .then(function(author) {
+              return Story.create({title : title, content: content, authorId : author.id  });
+            })
+        }
+      }
+    });
 
 const Author = db.define('author', {
     name: {
@@ -23,14 +40,14 @@ Author.hasMany(Story);
 
 const seed = function() {
   return connect()
-    .then(function() {
-      return Story.create({ title: 'The best story', content: "once upon a time"});
+      .then(function() {
+      return Author.create({ name : 'Leonard' });
     })
-    .then(function() {
-      return Story.create({ title: 'The second best story', content: "once upon another time"});
+    .then(function(author) {
+      Story.createStory('Leonard', 'Title', 'yohoooo');
     })
-    .then(function() {
-      return Author.create({name : 'Leonard'});
+    .then(function(author) {
+      Story.createStory('Evan', 'Another', 'yahaaa');
     })
 }
 
@@ -46,11 +63,11 @@ const connect = function() {
 };
 
 const sync = function() {
-  return connect()
-    .then(function() {
+  //return connect()
+    //.then(function() {
       return db.sync({ force: true });
       // instead IF TABLE EXIST
-    });
+    //});
 }
 
 module.exports = {

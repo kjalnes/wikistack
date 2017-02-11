@@ -1,5 +1,7 @@
 const express = require('express');
 const db = require('./db')
+const Author = db.Author;
+const Story = db.Story;
 const swig = require('swig');
 swig.setDefaults({cache: false});
 // const bodyParser = require('body-parser');
@@ -12,10 +14,24 @@ app.set('view engine', 'html');
 app.engine('html', swig.renderFile);
 
 app.get('/', function(req, res, next) {
-    db.Story.findAll()
+    Story.findAll({include : [
+            Author
+        ]})
         .then(function(stories){
+            // res.send(stories);
            res.render('index', { stories: stories })
         });
+});
+
+app.post('/', function(req, res, next) {
+    var authorName = req.body.author;
+    var storyTitle = req.body.title;
+    var storyContent = req.body.content;
+    Story.createStory(authorName, storyTitle, storyContent)
+        .then(function(story){
+            res.redirect('/');
+        });
+
 });
 
 
