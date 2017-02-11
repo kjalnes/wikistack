@@ -1,0 +1,10 @@
+<html>
+    <head>
+    </head>
+    <h1><a href='/'>Wikistack!!!</a></h1>
+    <body>
+        {% for story in stories %}
+            <li>{{story.title}} --- {{ story.content }} </li>
+        {% endfor%}
+    </body>
+</html>
