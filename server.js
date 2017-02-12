@@ -4,21 +4,16 @@ const Author = db.Author;
 const Story = db.Story;
 const swig = require('swig');
 swig.setDefaults({cache: false});
-// const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(require('body-parser').urlencoded({ extended: false }));
-
 app.set('view engine', 'html');
 app.engine('html', swig.renderFile);
 
 app.get('/', function(req, res, next) {
-    Story.findAll({include : [
-            Author
-        ]})
+    Story.findAll({include : [ Author ]})
         .then(function(stories){
-            // res.send(stories);
            res.render('index', { stories: stories })
         });
 });
@@ -27,11 +22,30 @@ app.post('/', function(req, res, next) {
     var authorName = req.body.author;
     var storyTitle = req.body.title;
     var storyContent = req.body.content;
-    Story.createStory(authorName, storyTitle, storyContent)
+    Story.createStory(authorName, storyTitle, storyContent) // this is a promise somehow
         .then(function(story){
             res.redirect('/');
         });
+});
 
+app.get('/:name', function(req, res, next) {
+    var name = req.params.name;
+    Story.getStories(name)
+        .then(function(selectStories) {
+            console.log(selectStories);
+            res.render('index', { stories : selectStories });
+        });
+});
+
+app.get('/:name/:title', function(req, res, next) {
+    var title = req.params.title;
+    var name = req.params.name;
+    // res.send(name, title);
+    Story.getStory(title, name)
+        .then(function(story) {
+            console.log(story);
+            res.render('index', { stories : story });
+        });
 });
 
 

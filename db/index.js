@@ -25,6 +25,30 @@ const Story = db.define('story', {
               return Story.create({title : title, content: content, authorId : author.id  });
             })
         }
+        ,
+        getStories : function(name) {
+          let filter = {};
+          if(name) {
+            filter.name = name;
+          }
+          return Story.findAll({
+            include : [ {
+              model: Author,
+              where: filter
+            }]
+          })
+        },
+        getStory : function(storyName, authorName) {
+          return Story.findAll({
+              where: {
+                title: storyName
+              },
+              include : [{ // join Author where name = authorName
+                model: Author,
+                where: { name : authorName }
+              }]
+          })
+        }
       }
     });
 
@@ -45,6 +69,12 @@ const seed = function() {
     })
     .then(function(author) {
       Story.createStory('Leonard', 'Title', 'yohoooo');
+    })
+    .then(function(author) {
+      Story.createStory('Bob', 'Another', 'yahaaa');
+    })
+    .then(function(author) {
+      Story.createStory('Evan', 'Another', 'yahaaa');
     })
     .then(function(author) {
       Story.createStory('Evan', 'Another', 'yahaaa');

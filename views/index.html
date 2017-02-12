@@ -21,7 +21,11 @@
 
     </form>
         {% for story in stories %}
-            <li>{{story.title}} --- {{ story.content }} -- {{ story.author.name }} </li>
+            <li>
+                <a href="/{{story.author.name}}">{{ story.author.name }}</a>
+                <a href="/{{story.author.name }}/{{ story.title }}">{{ story.title }}</a>
+                {{ story.content }}
+            </li>
         {% endfor%}
     </body>
 </html>
