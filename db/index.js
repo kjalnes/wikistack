@@ -1,17 +1,18 @@
 const Sequelize = require('Sequelize');
-var db = new Sequelize(process.env.DATABASE_URL);
+const db = new Sequelize(process.env.DATABASE_URL);
 
 // model singular
 const Story = db.define('story', {
       title: {
           type: Sequelize.STRING
+              //db.Sequelize.STRING ?
       },
       content: {
           type: Sequelize.TEXT
       }
     },
     {
-      classMethods: {
+      classMethods: {  // whats getterMethods??
         createStory : function(authorName, title, content) {
           return Author.findOne({ where : { name : authorName }})
             .then(function(author) {
@@ -31,6 +32,7 @@ const Story = db.define('story', {
           if(name) {
             filter.name = name;
           }
+          // returns a promise
           return Story.findAll({
             include : [ {
               model: Author,
@@ -39,13 +41,14 @@ const Story = db.define('story', {
           })
         },
         getStory : function(storyName, authorName) {
+          // returns a promise
           return Story.findAll({
               where: {
                 title: storyName
               },
               include : [{ // join Author where name = authorName
                 model: Author,
-                where: { name : authorName }
+                where: { name : authorName } // storyId..
               }]
           })
         }
@@ -68,16 +71,16 @@ const seed = function() {
       return Author.create({ name : 'Leonard' });
     })
     .then(function(author) {
-      Story.createStory('Leonard', 'Title', 'yohoooo');
+      Story.createStory('Leonard', 'Title', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas maximus rhoncus blandit. Pellentesque tempus sapien condimentum elit suscipit ultricies. Praesent placerat finibus mattis. Sed quis cursus erat. Phasellus vitae nunc lorem. Nam feugiat vulputate mauris ac tristique. Phasellus non est finibus, facilisis erat a, tincidunt arcu. Vivamus elementum leo vel nulla vehicula dignissim.');
     })
     .then(function(author) {
-      Story.createStory('Bob', 'Another', 'yahaaa');
+      Story.createStory('Bob', 'Another', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas maximus rhoncus blandit. Pellentesque tempus sapien condimentum elit suscipit ultricies. Praesent placerat finibus mattis. Sed quis cursus erat. Phasellus vitae nunc lorem. Nam feugiat vulputate mauris ac tristique. Phasellus non est finibus, facilisis erat a, tincidunt arcu. Vivamus elementum leo vel nulla vehicula dignissim.');
     })
     .then(function(author) {
-      Story.createStory('Evan', 'Another', 'yahaaa');
+      Story.createStory('Evan', 'Another', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas maximus rhoncus blandit. Pellentesque tempus sapien condimentum elit suscipit ultricies. Praesent placerat finibus mattis. Sed quis cursus erat. Phasellus vitae nunc lorem. Nam feugiat vulputate mauris ac tristique. Phasellus non est finibus, facilisis erat a, tincidunt arcu. Vivamus elementum leo vel nulla vehicula dignissim.');
     })
     .then(function(author) {
-      Story.createStory('Evan', 'Another', 'yahaaa');
+      Story.createStory('Pinoccio', 'Another', 'yahaaa');
     })
 }
 
@@ -107,4 +110,8 @@ module.exports = {
   seed
 };
 
-
+/* models : {
+  Story,
+  Author
+}
+*/

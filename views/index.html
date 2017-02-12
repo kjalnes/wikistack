@@ -1,31 +1,33 @@
 <html>
     <head>
     </head>
-    <h1><a href='/'>Wikistack!!!</a></h1>
-    <body>
+    <h1> <a href='/' style="color:magenta">Wikistack!!!</a></h1>
+    <body style="margin: 40px">
+        <form method='POST' action='/' style="border:solid 1px red; padding:20px">
+            <div>
+                <label name="author"><h4>Author</h4></label>
+                <input name="author" / style="width:20%">
+            </div>
+            <div>
+                <label name="title"><h4>Title</h4></label>
+                <input name="title" style="width:20%"/>
+            </div>
+            <div>
+                <label name="content"><h4>Story</h4></label>
+                <textarea name="content" rows="10" style="width:50%"> </textarea>
+            </div>
+            <br>
+            <button type="submit" style="background-color: yellow"><h1>Save</h1></button>
 
-    <form method='POST' action='/'>
-        <div>
-            <label name="author">Author</label>
-            <input name="author" />
-        </div>
-        <div>
-            <label name="title">Title</label>
-            <input name="title" />
-        </div>
-        <div>
-            <label name="content">Story</label>
-            <input name="content" />
-        </div>
-        <button type="submit">Save</button>
-
-    </form>
-        {% for story in stories %}
-            <li>
-                <a href="/{{story.author.name}}">{{ story.author.name }}</a>
-                <a href="/{{story.author.name }}/{{ story.title }}">{{ story.title }}</a>
-                {{ story.content }}
-            </li>
-        {% endfor%}
+        </form>
+        <ul style="list-style: none">
+            {% for story in stories %}
+                <li style="margin: 20px">
+                    <a href="/{{story.author.name}}">{{ story.author.name }}</a><br>
+                    <a href="/{{story.author.name }}/{{ story.title }}">{{ story.title }}</a><br>
+                    {{ story.content }} {{story.authorId}}
+                </li>
+            {% endfor%}
+        </ul>
     </body>
 </html>
